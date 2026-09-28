@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ExecutorRequest(
         @NotNull
-        Long id
+        Long executorId
 ) {
 }

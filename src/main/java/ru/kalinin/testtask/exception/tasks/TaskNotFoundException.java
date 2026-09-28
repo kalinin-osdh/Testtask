@@ -1,6 +1,6 @@
-package ru.kalinin.testtask.dto.response.tasks;
+package ru.kalinin.testtask.exception.tasks;
 
-import ru.kalinin.testtask.dto.response.NotFoundException;
+import ru.kalinin.testtask.exception.NotFoundException;
 
 public class TaskNotFoundException extends NotFoundException {
 

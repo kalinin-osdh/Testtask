@@ -1,4 +1,4 @@
-package ru.kalinin.testtask.dto.response;
+package ru.kalinin.testtask.exception;
 
 public class NotFoundException extends CustomException {
     public NotFoundException(String message) {

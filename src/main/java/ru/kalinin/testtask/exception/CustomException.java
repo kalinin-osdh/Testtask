@@ -1,4 +1,4 @@
-package ru.kalinin.testtask.dto.response;
+package ru.kalinin.testtask.exception;
 
 public abstract class CustomException extends RuntimeException {
     public CustomException(String message) {
