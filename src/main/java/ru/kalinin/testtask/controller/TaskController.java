@@ -1,9 +1,13 @@
 package ru.kalinin.testtask.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.kalinin.testtask.dto.request.ExecutorRequest;
+import ru.kalinin.testtask.dto.request.StatusRequest;
+import ru.kalinin.testtask.dto.request.TaskRequest;
+import ru.kalinin.testtask.dto.response.TaskResponse;
 import ru.kalinin.testtask.entity.Task;
 import ru.kalinin.testtask.service.interfaces.TaskService;
 
@@ -15,23 +19,37 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
 
-    public ResponseEntity<List<Task>> getAllTasks() {
+    @GetMapping()
+    // todo пагинация
+    public ResponseEntity<List<TaskResponse>> getAllTasks() {
         return null;
     }
 
-    public ResponseEntity<Task> getTaskById(Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
         return null;
     }
 
-    public ResponseEntity<Task> addTask() {
+    @PostMapping()
+    public ResponseEntity<TaskResponse> addTask(
+            @Valid @RequestBody TaskRequest request
+            ) {
         return null;
     }
 
-    public ResponseEntity<Task> addExecutorForTask() {
+    @PatchMapping("/{id}/executor")
+    public ResponseEntity<TaskResponse> addExecutorForTask(
+            @PathVariable Long id,
+            @Valid @RequestBody ExecutorRequest request
+    ) {
         return null;
     }
 
-    public ResponseEntity<Task> changeTaskStatus() {
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponse> changeTaskStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody StatusRequest request
+    ) {
         return null;
     }
 }
