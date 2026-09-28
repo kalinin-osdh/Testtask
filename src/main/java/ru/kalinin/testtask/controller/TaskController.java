@@ -2,17 +2,17 @@ package ru.kalinin.testtask.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kalinin.testtask.dto.request.ExecutorRequest;
+import ru.kalinin.testtask.dto.request.PageTaskRequest;
 import ru.kalinin.testtask.dto.request.StatusRequest;
 import ru.kalinin.testtask.dto.request.TaskRequest;
+import ru.kalinin.testtask.dto.response.PageResponse;
 import ru.kalinin.testtask.dto.response.TaskResponse;
-import ru.kalinin.testtask.entity.Task;
 import ru.kalinin.testtask.service.interfaces.TaskService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -21,9 +21,20 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping()
-    // todo пагинация
-    public ResponseEntity<List<TaskResponse>> getAllTasks() {
-        return ResponseEntity.ok(taskService.getAllTasks());
+    public ResponseEntity<PageResponse<TaskResponse>> getAllTasks(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "1") Integer size,
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        PageTaskRequest pageRequest = new PageTaskRequest(
+                page,
+                size,
+                sortBy,
+                sortDirection
+        );
+
+        return ResponseEntity.ok(taskService.getAllTasks(pageRequest));
     }
 
     @GetMapping("/{id}")
@@ -34,7 +45,7 @@ public class TaskController {
     @PostMapping()
     public ResponseEntity<TaskResponse> addTask(
             @Valid @RequestBody TaskRequest request
-            ) {
+    ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addTask(request));
     }
 

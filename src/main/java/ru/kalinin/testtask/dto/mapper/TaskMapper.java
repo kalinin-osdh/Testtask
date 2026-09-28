@@ -1,7 +1,10 @@
 package ru.kalinin.testtask.dto.mapper;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 import ru.kalinin.testtask.dto.request.TaskRequest;
+import ru.kalinin.testtask.dto.response.PageResponse;
 import ru.kalinin.testtask.dto.response.TaskResponse;
 import ru.kalinin.testtask.entity.Task;
 
@@ -38,6 +41,18 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getStatus(),
                 task.getExecutor() == null ? null : task.getExecutor().getId()
+        );
+    }
+
+    public PageResponse<TaskResponse> toPageResponse(Page<Task> page) {
+        Page<TaskResponse> responsePage = page.map(this::toResponse);
+
+        return new PageResponse<>(
+            responsePage.getContent(),
+                responsePage.getNumber(),
+                responsePage.getSize(),
+                responsePage.getTotalPages(),
+                responsePage.getTotalElements()
         );
     }
 }

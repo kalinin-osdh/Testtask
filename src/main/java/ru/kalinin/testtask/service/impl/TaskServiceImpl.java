@@ -1,17 +1,23 @@
 package ru.kalinin.testtask.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kalinin.testtask.dto.mapper.TaskMapper;
 import ru.kalinin.testtask.dto.request.ExecutorRequest;
+import ru.kalinin.testtask.dto.request.PageTaskRequest;
 import ru.kalinin.testtask.dto.request.StatusRequest;
 import ru.kalinin.testtask.dto.request.TaskRequest;
+import ru.kalinin.testtask.dto.response.PageResponse;
 import ru.kalinin.testtask.dto.response.TaskResponse;
-import ru.kalinin.testtask.exception.tasks.TaskNotFoundException;
-import ru.kalinin.testtask.exception.users.UserNotFoundException;
 import ru.kalinin.testtask.entity.Task;
 import ru.kalinin.testtask.entity.User;
+import ru.kalinin.testtask.exception.tasks.TaskNotFoundException;
+import ru.kalinin.testtask.exception.users.UserNotFoundException;
 import ru.kalinin.testtask.repository.TaskRepository;
 import ru.kalinin.testtask.repository.UserRepository;
 import ru.kalinin.testtask.service.interfaces.TaskService;
@@ -28,10 +34,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TaskResponse> getAllTasks() {
-        List<Task> tasks = taskRepository.findAll();
+    public PageResponse<TaskResponse> getAllTasks(PageTaskRequest request) {
+        Sort sort = Sort.by(Sort.Direction.fromString(request.sortDirection()),
+                request.sortBy());
 
-        return taskMapper.toResponse(tasks);
+        Pageable pageable = PageRequest.of(request.page(), request.size(), sort);
+
+        Page<Task> page = taskRepository.findAll(pageable);
+
+        return taskMapper.toPageResponse(page);
     }
 
     @Override
@@ -54,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = getById(id);
 
         User executor = userRepository.findById(request.executorId()).orElseThrow(
-                ()-> new UserNotFoundException(request.executorId())
+                () -> new UserNotFoundException(request.executorId())
         );
 
         task.setExecutor(executor);
