@@ -2,6 +2,7 @@ package ru.kalinin.testtask.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.kalinin.testtask.dto.request.ExecutorRequest;
@@ -22,19 +23,19 @@ public class TaskController {
     @GetMapping()
     // todo пагинация
     public ResponseEntity<List<TaskResponse>> getAllTasks() {
-        return null;
+        return ResponseEntity.ok(taskService.getAllTasks());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
-        return null;
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @PostMapping()
     public ResponseEntity<TaskResponse> addTask(
             @Valid @RequestBody TaskRequest request
             ) {
-        return null;
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.addTask(request));
     }
 
     @PatchMapping("/{id}/executor")
@@ -42,7 +43,7 @@ public class TaskController {
             @PathVariable Long id,
             @Valid @RequestBody ExecutorRequest request
     ) {
-        return null;
+        return ResponseEntity.ok(taskService.addExecutor(id, request));
     }
 
     @PatchMapping("/{id}/status")
@@ -50,6 +51,6 @@ public class TaskController {
             @PathVariable Long id,
             @Valid @RequestBody StatusRequest request
     ) {
-        return null;
+        return ResponseEntity.ok(taskService.changeStatus(id, request));
     }
 }

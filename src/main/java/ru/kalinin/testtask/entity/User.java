@@ -17,5 +17,6 @@ public class User {
     @Column(nullable = false, length = 20)
     private String name;
     @Column(unique = true, nullable = false)
+    // todo valid email dto
     private String email;
 }

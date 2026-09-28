@@ -19,4 +19,8 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleException(Exception ex) {
         return new ErrorResponse("Внутренняя ошибка сервера", ex.getMessage());
     }
+
+    // todo ошибка валидации
+
+    // todo ошибка при смене статуса на существующий - ?
 }
