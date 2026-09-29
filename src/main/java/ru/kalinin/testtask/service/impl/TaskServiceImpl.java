@@ -18,11 +18,12 @@ import ru.kalinin.testtask.entity.Task;
 import ru.kalinin.testtask.entity.User;
 import ru.kalinin.testtask.exception.tasks.TaskNotFoundException;
 import ru.kalinin.testtask.exception.users.UserNotFoundException;
+import ru.kalinin.testtask.kafka.TaskProducer;
+import ru.kalinin.testtask.kafka.event.task.ExecutorAddedEvent;
+import ru.kalinin.testtask.kafka.event.task.TaskCreatedEvent;
 import ru.kalinin.testtask.repository.TaskRepository;
 import ru.kalinin.testtask.repository.UserRepository;
 import ru.kalinin.testtask.service.interfaces.TaskService;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -31,6 +32,8 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final TaskMapper taskMapper;
+
+    private final TaskProducer taskProducer;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,6 +60,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse addTask(TaskRequest request) {
         Task saved = taskRepository.save(taskMapper.toEntity(request));
 
+        TaskCreatedEvent event = TaskCreatedEvent.of(saved.getId(), saved.getTitle());
+
+        taskProducer.sendTaskCreated(event);
+
         return taskMapper.toResponse(saved);
     }
 
@@ -69,6 +76,10 @@ public class TaskServiceImpl implements TaskService {
         );
 
         task.setExecutor(executor);
+
+        ExecutorAddedEvent event = ExecutorAddedEvent.of(task.getId(), executor.getId());
+
+        taskProducer.sendExecutorAdded(event);
 
         return taskMapper.toResponse(taskRepository.save(task));
     }
@@ -83,6 +94,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Task getById(Long id) {
         return taskRepository.findById(id).orElseThrow(
                 () -> new TaskNotFoundException(id)

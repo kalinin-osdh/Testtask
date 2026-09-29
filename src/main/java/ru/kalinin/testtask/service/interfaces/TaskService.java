@@ -1,6 +1,5 @@
 package ru.kalinin.testtask.service.interfaces;
 
-import org.springframework.data.domain.Page;
 import ru.kalinin.testtask.dto.request.ExecutorRequest;
 import ru.kalinin.testtask.dto.request.PageTaskRequest;
 import ru.kalinin.testtask.dto.request.StatusRequest;
@@ -8,8 +7,6 @@ import ru.kalinin.testtask.dto.request.TaskRequest;
 import ru.kalinin.testtask.dto.response.PageResponse;
 import ru.kalinin.testtask.dto.response.TaskResponse;
 import ru.kalinin.testtask.entity.Task;
-
-import java.util.List;
 
 public interface TaskService {
     PageResponse<TaskResponse> getAllTasks(PageTaskRequest request);
