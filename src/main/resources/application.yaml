@@ -6,9 +6,9 @@ spring:
     name: testtask
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://postgres:5432/${SPRING_DATABASE_NAME}
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -27,17 +27,7 @@ spring:
     drop-first: false
 
   kafka:
-    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+    bootstrap-servers: ${SPRING_BOOTSTRAP_SERVER}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
-
-logging:
-  level:
-    ru.kalinin.testtask: DEBUG
-    org.hibernate.SQL: DEBUG
-    liquibase: DEBUG
-    org.apache.kafka.clients.producer: TRACE
-    org.springframework.kafka: TRACE
-    org.apache.kafka: TRACE
-    org.springframework.kafka.core: TRACE
